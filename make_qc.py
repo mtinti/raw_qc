@@ -35,7 +35,7 @@ from ThermoFisher.CommonCore.RawFileReader import RawFileReaderAdapter
 
 
 def ReadScanInformation(rawFile, firstScanNumber, lastScanNumber):
-    print('extract data')
+    #print('extract data')
     time_ms, current_ms, ms_type = [], [], []
     #time_ms2, current_ms2 = [], []
     for scanIndex, scan in enumerate(tqdm(range(firstScanNumber, lastScanNumber))):
@@ -50,12 +50,11 @@ def ReadScanInformation(rawFile, firstScanNumber, lastScanNumber):
         time_ms.append(time)
         current_ms.append(total_current)
         ms_type.append(scanFilter.MSOrder)
-    print('end extract data')
+    #print('end extract data')
     return time_ms, current_ms, ms_type
 
 
 def plot_ms_cycle_time_and_total_current(df, out_path, instrument_name=None):
-
     # Set up the plot layout
     fig, axes = plt.subplots(figsize=(16, 8), ncols=2, nrows=2)
     axes = axes.flatten()
@@ -75,10 +74,17 @@ def plot_ms_cycle_time_and_total_current(df, out_path, instrument_name=None):
     ms1.groupby('RT_bin')['total_current'].mean().reset_index().plot(kind='line', x='RT_bin', y='total_current', ax=axes[2], label='MS1')
     ms2.groupby('RT_bin')['total_current'].mean().reset_index().plot(kind='line', x='RT_bin', y='total_current', ax=axes[3], label='MS2')
 
+    axes[0].set_ylabel('Cycle time (s)')
+    axes[1].set_ylabel('Cycle time (s)')
+    axes[2].set_ylabel('Total current')
+    axes[3].set_ylabel('Total current')
+
+    file_name = os.path.basename(out_path)
     # Optionally print the instrument name if provided
     if instrument_name:
-        plt.title('Instrument name: {}'.format(instrument_name))
-    plt.savefig(os.path.join(out_path+'.png'))
+        plt.suptitle(f'QC {file_name} from {instrument_name} ')
+    plt.tight_layout()
+    plt.savefig(os.path.join(out_path+'.QC.png'))
 
 
 
@@ -94,18 +100,21 @@ if __name__ == '__main__':
 
     startTime = rawFile.RunHeaderEx.StartTime
     endTime = rawFile.RunHeaderEx.EndTime
-    print('Analysing raw file from', instrument_name)
-    print('startTime', startTime, 'endTime:', endTime, 'RAW file')
-    time_list = ReadScanInformation(rawFile, firstScanNumber, lastScanNumber)
-    
-    df = pd.DataFrame()
-    df['RT']=time_list[0]
-    df['total_current']=time_list[1]
-    df['MS']=time_list[2]
-    df['MS']=df['MS'].astype(str)
-    df['RT_bin']=df['RT'].astype(int)
 
     instrument_name = rawFile.GetInstrumentData().Name
+    file_name = os.path.basename(raw_file_path)
 
+    print(f'Analysing {file_name} from {instrument_name}')
+    print(f'startTime {startTime} endTime: {endTime}')
+    out_list = ReadScanInformation(rawFile, firstScanNumber, lastScanNumber)
+    
+    #build a dataframe with the data
+    df = pd.DataFrame()
+    df['RT']=out_list[0]
+    df['total_current']=out_list[1]
+    df['MS']=out_list[2]
+    df['MS']=df['MS'].astype(str)
+    df['RT_bin']=df['RT'].astype(int)
+    print('Make QC plot')
     plot_ms_cycle_time_and_total_current(df, raw_file_path, instrument_name=instrument_name)
     print('All done')
