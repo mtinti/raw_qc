@@ -94,6 +94,7 @@ if __name__ == '__main__':
 
     startTime = rawFile.RunHeaderEx.StartTime
     endTime = rawFile.RunHeaderEx.EndTime
+    print('Analysing raw file from', instrument_name)
     print('startTime', startTime, 'endTime:', endTime, 'RAW file')
     time_list = ReadScanInformation(rawFile, firstScanNumber, lastScanNumber)
     
@@ -105,6 +106,6 @@ if __name__ == '__main__':
     df['RT_bin']=df['RT'].astype(int)
 
     instrument_name = rawFile.GetInstrumentData().Name
-    print('Analysing raw file from', instrument_name)
+
     plot_ms_cycle_time_and_total_current(df, raw_file_path, instrument_name=instrument_name)
     print('All done')
