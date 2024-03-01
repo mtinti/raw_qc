@@ -9,8 +9,6 @@ import numpy as np
 import warnings
 warnings.filterwarnings('ignore')
 
-
-
 sys.path.append("/usr/bin/mono")  # Adjust this path to Mono's installation directory
 
 import pythonnet
@@ -108,5 +106,6 @@ if __name__ == '__main__':
     df['RT_bin']=df['RT'].astype(int)
 
     instrument_name = rawFile.GetInstrumentData().Name
+    print('Analysing raw file from', instrument_name)
     plot_ms_cycle_time_and_total_current(df, raw_file_path, instrument_name=instrument_name)
     print('All done')
