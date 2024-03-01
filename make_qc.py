@@ -6,7 +6,15 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 
-#docker run --rm -v /path/to/local/directory:/data raw_qc_image /data/your_raw_file.raw
+import warnings
+warnings.filterwarnings('ignore')
+
+
+
+sys.path.append("/usr/bin/mono")  # Adjust this path to Mono's installation directory
+
+import pythonnet
+pythonnet.set_runtime("/usr/bin/mono") 
 
 # Set the base path to where the RawFileReader repository is cloned in the Docker container
 base_path = '/RawFileReader'
@@ -29,8 +37,8 @@ from ThermoFisher.CommonCore.MassPrecisionEstimator import PrecisionEstimate
 from ThermoFisher.CommonCore.RawFileReader import RawFileReaderAdapter
 
 
-
 def ReadScanInformation(rawFile, firstScanNumber, lastScanNumber):
+    print('extract data')
     time_ms, current_ms, ms_type = [], [], []
     #time_ms2, current_ms2 = [], []
     for scanIndex, scan in enumerate(tqdm(range(firstScanNumber, lastScanNumber))):
@@ -45,7 +53,7 @@ def ReadScanInformation(rawFile, firstScanNumber, lastScanNumber):
         time_ms.append(time)
         current_ms.append(total_current)
         ms_type.append(scanFilter.MSOrder)
-
+    print('end extract data')
     return time_ms, current_ms, ms_type
 
 
@@ -89,7 +97,7 @@ if __name__ == '__main__':
 
     startTime = rawFile.RunHeaderEx.StartTime
     endTime = rawFile.RunHeaderEx.EndTime
-    #print(startTime, endTime)
+    print('startTime':, startTime, 'endTime:', endTime, 'RAW file')
     time_list = ReadScanInformation(rawFile, firstScanNumber, lastScanNumber)
 
     df = pd.DataFrame()
@@ -101,3 +109,4 @@ if __name__ == '__main__':
 
     instrument_name = rawFile.GetInstrumentData().Name
     plot_ms_cycle_time_and_total_current(df, raw_file_path, instrument_name=instrument_name)
+    print('All done')
