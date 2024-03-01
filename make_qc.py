@@ -9,10 +9,9 @@ import numpy as np
 import warnings
 warnings.filterwarnings('ignore')
 
-sys.path.append("/usr/bin/mono")  # Adjust this path to Mono's installation directory
-
-import pythonnet
-pythonnet.set_runtime("/usr/bin/mono") 
+#sys.path.append("/usr/bin/mono")  # Adjust this path to Mono's installation directory
+#import pythonnet
+#pythonnet.set_runtime("/usr/bin/mono") 
 
 # Set the base path to where the RawFileReader repository is cloned in the Docker container
 base_path = '/RawFileReader'
