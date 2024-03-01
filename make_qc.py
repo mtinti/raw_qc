@@ -79,6 +79,11 @@ def plot_ms_cycle_time_and_total_current(df, out_path, instrument_name=None):
     axes[2].set_ylabel('Total current')
     axes[3].set_ylabel('Total current')
 
+    axes[0].set_xlabel('Retention Time (s)')
+    axes[1].set_xlabel('Retention Time (s)')
+    axes[2].set_xlabel('Retention Time (s)')
+    axes[3].set_xlabel('Retention Time (s)')
+
     file_name = os.path.basename(out_path)
     # Optionally print the instrument name if provided
     if instrument_name:
@@ -104,7 +109,7 @@ if __name__ == '__main__':
     instrument_name = rawFile.GetInstrumentData().Name
     file_name = os.path.basename(raw_file_path)
 
-    print(f'Analysing {file_name} from {instrument_name}')
+    print(f'Analysing {file_name} file from {instrument_name}')
     print(f'startTime {startTime} endTime: {endTime}')
     out_list = ReadScanInformation(rawFile, firstScanNumber, lastScanNumber)
     
