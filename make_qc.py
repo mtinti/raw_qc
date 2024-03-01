@@ -95,9 +95,9 @@ if __name__ == '__main__':
 
     startTime = rawFile.RunHeaderEx.StartTime
     endTime = rawFile.RunHeaderEx.EndTime
-    print('startTime':, startTime, 'endTime:', endTime, 'RAW file')
+    print('startTime', startTime, 'endTime:', endTime, 'RAW file')
     time_list = ReadScanInformation(rawFile, firstScanNumber, lastScanNumber)
-
+    
     df = pd.DataFrame()
     df['RT']=time_list[0]
     df['total_current']=time_list[1]
