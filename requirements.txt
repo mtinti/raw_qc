@@ -1,0 +1,7 @@
+# Required for build
+setuptools==58.0.4
+pythonnet==3.0.3
+tqdm
+pandas
+numpy
+matplotlib
