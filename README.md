@@ -1,6 +1,6 @@
 ![Wellcome Centre for Anti-Infectives Research Logo](static/wcar.png)
 # Raw QC
-## A quick way to QC raw files from Themo 
+## A quick way to QC .raw files from Thermo Fisher Scientific 
 
 ![QC example](static/qc.png)
 
